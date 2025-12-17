@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login moderno</title>
+  <meta name="description" content="Sistema de filtrado de data con acceso para administradores, Usuario y programador.">
+
+  <title>Login/iniciar_seción</title>
 
   <!-- Iconos -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,7 +14,7 @@
 </head>
 <body>
 
-  <!-- MANCHAS DE FONDO -->
+  <!-- MANCHAS DE FONDO ESTILOS PARA EL BACKGROUND-->
   <div class="paint-blobs">
     <div class="blob blob1"></div>
     <div class="blob blob2"></div>
@@ -22,31 +24,36 @@
   <!-- Sección principal -->
   <main class="login-layout">
 
-    <!-- Formulario de login -->
+    <!-- Formulario de login con clase boostrap_5 -->
     <section class="login-form">
-
+      <!--aqui va la conexión de la url segun el rol de usuario deje un ejemplo de la vista de django en el README.md-->
+    <form action="{% url 'login' %}" method="POST"> 
       <!-- LOGO -->
       <div class="logo-container">
-        <img src="logo de filtado.png" alt="Logo">
+        <img src="logo de filtado.png" loading="lazy" alt="Logo del sistema">
       </div>
 
       <h2>Bienvenido</h2>
       <p class="subtitle">Inicia sesión para continuar</p>
 
       <div class="input-group">
-        <i class="fa-solid fa-user"></i>
-        <input type="text" placeholder="Usuario">
+        <label for="usuario" class="visually-hidden">Usuario</label>
+        <i class="fa-solid fa-user icon-left"></i>
+        <input type="text" name="#" id="#" placeholder="Usuario">
       </div>
 
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" placeholder="Contraseña">
-      </div>
+      <div class="input-group password-wrapper">
+      <label for="password" class="visually-hidden">Contraseña</label>
+    <i class="fas fa-lock icon-left"></i>
+    <input type="password" id="password" name="password" placeholder="Contraseña">
+    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
+</div>
 
       <button type="submit">Ingresar</button>
     </section>
 
   </main>
-
+<script src="funcionalidad.js"></script>
 </body>
 </html>
+
