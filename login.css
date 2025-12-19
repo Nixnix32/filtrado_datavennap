@@ -1,5 +1,5 @@
 /* ------------------------------------------------------
-   RESET
+   RESET Y BASE
 ------------------------------------------------------ */
 * {
   box-sizing: border-box;
@@ -16,14 +16,15 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  /* CAMBIO CLAVE: Permitir scroll si el contenido es más alto que la pantalla */
+  overflow-y: auto; 
 }
 
 /* ------------------------------------------------------
-   MANCHAS DE FONDO
+   MANCHAS DE FONDO (Blobs)
 ------------------------------------------------------ */
 .paint-blobs {
-  position: absolute;
+  position: fixed; /* Fixed para que no se muevan al hacer scroll */
   inset: 0;
   z-index: -1;
   overflow: hidden;
@@ -38,56 +39,49 @@ body {
   opacity: 0.45;
 }
 
-/* Rosado */
-.blob1 {
-  background: #f8c8dc;
-  top: -90px;
-  left: -70px;
-}
-
-/* Lila */
-.blob2 {
-  background: #e6ccf2;
-  bottom: -110px;
-  right: -50px;
-}
-
-/* Verde menta */
-.blob3 {
-  background: #b8e4ce;
-  top: 55%;
-  left: 58%;
-  transform: translate(-50%, -50%);
+.blob1 { background: #f8c8dc; top: -90px; left: -70px; }
+.blob2 { background: #e6ccf2; bottom: -110px; right: -50px; }
+.blob3 { 
+  background: #b8e4ce; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
 }
 
 /* ------------------------------------------------------
-   LAYOUT
+   LAYOUT Y FORMULARIO (BASE = MÓVIL)
 ------------------------------------------------------ */
 .login-layout {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
+  padding: 40px 20px; /* Padding extra para que respire al hacer scroll */
+  min-height: 100vh;
 }
 
-/* ------------------------------------------------------
-   FORMULARIO
------------------------------------------------------- */
 .login-form {
   background: white;
-  padding: 55px 45px;
+  padding: 40px 30px; /* Padding optimizado para móvil */
   border-radius: 22px;
   box-shadow: 0 18px 45px rgba(0,0,0,0.10);
   width: 100%;
   max-width: 380px;
   text-align: center;
   border: 1px solid #f0e9f5;
+  position: relative;
+  z-index: 1;
+}
+.titulo_login{
+  font-weight: 700;
 }
 
-/* LOGO */
+/* ------------------------------------------------------
+   ELEMENTOS INTERNOS
+------------------------------------------------------ */
 .logo-container {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   margin: 0 auto 20px auto;
 }
 
@@ -97,31 +91,41 @@ body {
   object-fit: contain;
 }
 
-/* ------------------------------------------------------
-   TEXTOS
------------------------------------------------------- */
 .login-form h2 {
   margin-bottom: 8px;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: -0.5px;
   color: #333;
 }
 
 .subtitle {
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 14px;
   color: #777;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
-/* ------------------------------------------------------
-   INPUTS
------------------------------------------------------- */
 .input-group {
   position: relative;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
+
+.input-group input {
+  width: 100%;
+  padding: 13px 12px 13px 45px;
+  border-radius: 12px;
+  border: 1px solid #e3d7ea;
+  font-size: 15px;
+  background: #fcfcfe;
+  transition: 0.25s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #c76998;
+  box-shadow: 0 0 0 3px rgba(199,105,152,0.15);
+
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -134,58 +138,18 @@ body {
   border: 0;
 }
 
-
-/* Ícono izquierdo (usuario/candado) */
-.icon-left {
+.icon-left, .toggle-password {
   position: absolute;
-  top: 50%;
-  left: 14px;
+  top: 55%;
   transform: translateY(-50%);
   color: #a5346b;
-  font-size: 17px;
 }
 
-.input-group input {
-  width: 100%;
-  padding: 13px 12px 13px 45px;
-  border-radius: 12px;
-  border: 1px solid #e3d7ea;
-  font-size: 15px;
-  font-weight: 500;
-  background: #fcfcfe;
-  transition: 0.25s ease;
-}
+.icon-left { left: 14px; }
+.toggle-password { right: 14px; cursor: pointer; }
 
-.input-group input:focus {
-  outline: none;
-  border-color: #c76998;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(199,105,152,0.25);
-}
-
-/* ------------------------------------------------------
-   OJITO PARA MOSTRAR/OCULTAR CONTRASEÑA
------------------------------------------------------- */
-.password-wrapper input {
-  padding-left: 45px;   /* espacio para el candado */
-  padding-right: 45px;  /* espacio para el ojito */
-}
-
-.toggle-password {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  transform: translateY(-50%);
-  font-size: 17px;
-  color: #a5346b;
-  cursor: pointer;
-}
-
-/* ------------------------------------------------------
-   BOTÓN
------------------------------------------------------- */
 .login-form button {
-  margin-top: 25px;
+  margin-top: 15px;
   width: 100%;
   padding: 14px;
   background: linear-gradient(135deg, #c76998, #a5346b);
@@ -193,26 +157,43 @@ body {
   border: none;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 16px;
-  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: 
-    transform 0.35s ease,
-    box-shadow 0.35s ease,
-    background 0.35s ease;
+  transition: 0.3s;
 }
 
 .login-form button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(165,52,107,0.35);
-  background: linear-gradient(135deg, #b85a8a, #8f2d5c);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 15px rgba(165,52,107,0.2);
 }
 
 /* ------------------------------------------------------
-   RESPONSIVE
+   RESPONSIVE: PANTALLAS GRANDES (Desktop/Tablet)
 ------------------------------------------------------ */
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .login-form {
-    padding: 40px 30px;
+    padding: 55px 45px; /* Más espacio en pantallas grandes */
+  }
+  .login-form h2 {
+    font-size: 30px;
+  }
+}
+
+/* ------------------------------------------------------
+   RESPONSIVE: PANTALLAS BAJAS (Modo Horizontal / Landscape)
+------------------------------------------------------ */
+@media (max-height: 550px) {
+  .login-layout {
+    padding: 20px; /* Menos margen exterior */
+  }
+  .login-form {
+    padding: 25px 30px; /* Formulario más compacto */
+  }
+  .logo-container {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    margin-bottom: 15px;
   }
 }
