@@ -30,7 +30,7 @@ share/python-wheels/
 MANIFEST
 test_db.py
 debug_utf8.py
-
+check_db.py
 
 # --- BASES DE DATOS ---
 *.sqlite3
