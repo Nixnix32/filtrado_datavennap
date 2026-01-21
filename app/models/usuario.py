@@ -1,4 +1,4 @@
-# Librerias para el Mapeo de datos de una tabla.
+# Librerias para el Mapeo de una tabla.
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String
 
@@ -9,6 +9,6 @@ from app.database import Base
 class Usuario(Base):
     __tablename__ = "usuarios"
     id: Mapped[int] = mapped_column(primary_key=True)
-    cedula: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    cedula: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
     nombre: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
     
