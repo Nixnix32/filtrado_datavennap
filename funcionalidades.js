@@ -17,7 +17,6 @@ if (inputExcel) {
     inputExcel.onchange = function() {
         if (this.files[0]) {
             nombreArchivo.innerText = this.files[0].name;
-            // Limpiamos estilos de estados anteriores al elegir un nuevo archivo
             nombreArchivo.classList.remove('texto-exito', 'texto-error');
         } else {
             nombreArchivo.innerText = "Ningún archivo seleccionado";
@@ -35,94 +34,210 @@ async function enviandodatos() {
         return;
     }
 
-    // Mostrar loader antes de iniciar
     document.getElementById("loader").style.display = "block";
-    
     const formData = new FormData();
     formData.append('file', archivo);
 
     try {
-        const response = await fetch('http://192.168.0.198:8000/usuarios/upload', {
+        const response = await fetch('http://192.168.0.184:8000/importar', {
             method: 'POST',
             body: formData
         });
 
-        if (!response.ok) throw new Error("Error al procesar el archivo en el servidor");
+        if (!response.ok) throw new Error("Error al procesar el archivo");
 
-        const resultado = await response.json();
-
-        // ✅ ÉXITO: Feedback visual verde
         nombreArchivo.innerText = "¡Archivo subido correctamente!";
-        nombreArchivo.classList.remove('texto-error');
         nombreArchivo.classList.add('texto-exito');
 
         Swal.fire({
             title: '¡Carga Exitosa!',
+            text: 'El archivo se subió. Presiona "Mostrar" cuando quieras ver los datos.',
             icon: 'success',
-            confirmButtonText: 'Ver Datos'
-        }).then((result) => {
-            if (result.isConfirmed) cargarUsuariosDesdeBackend();
-        });
+            confirmButtonText: 'ok'
+        }); 
 
     } catch (error) {
         console.error("Error en la carga:", error);
-        
-        // ❌ ERROR: Feedback visual rojo
-        nombreArchivo.innerText = "Error al subir el archivo";
-        nombreArchivo.classList.remove('texto-exito');
         nombreArchivo.classList.add('texto-error');
-        
-        Swal.fire('Error', 'No se pudo subir el archivo. Revisa la conexión.', 'error');
-
+        Swal.fire('Error', 'No se pudo subir el archivo al servidor.', 'error');
     } finally {
-        // 🛑 Ocultar loader SIEMPRE al terminar
         document.getElementById("loader").style.display = "none";
-        // Opcional: limpiar input para permitir re-selección
         fileInput.value = ""; 
     }
 }
 
-// --- 3. CARGA Y RENDERIZADO (Se mantiene tu lógica funcional) ---
+// --- 3. CARGA Y RENDERIZADO DINÁMICO ---
 
 async function cargarUsuariosDesdeBackend() {
     document.getElementById("loader").style.display = "block";
     try {
-        const response = await fetch('http://192.168.0.198:8000/usuarios/', { method: 'GET' });
+        const response = await fetch('http://192.168.0.184:8000/vista/?skip=0&limit=10', { 
+            method: 'GET',
+            headers: { 'accept': 'application/json' }
+        });
+        
         if (!response.ok) throw new Error("Error en el servidor");
         
         const datosRecibidos = await response.json();
         
-        datosTotales = datosRecibidos.map((dato, index) => ({
-            id_unico: dato.id || index,
-            codigo: dato.codigo || `REF-${index}`,
-            cedula: dato.cedula || "00000000",
-            nombre: dato.nombre || "Sin Nombre",
-            telefono: dato.telefono || "N/A",
-            estado: dato.estado || "N/A",
-            municipio: dato.municipio || "N/A",
-            categoria: dato.categoria || "General",
-            subcategoria: dato.subcategoria || "General",
-            estatus: dato.estatus || "EN PROCESO",
-            aprobacion: dato.aprobacion || "POR APROBAR",
-            estatusClass: (dato.estatus === "PROCESADA") ? "bg-primary text-white" : "bg-warning text-dark",
-            aprobClass: (dato.aprobacion === "APROBADA") ? "bg-success text-white" : "bg-secondary text-white"
-        }));
+        // CORRECCIÓN AQUÍ: Accedemos a la propiedad .data que vimos en tu Swagger
+        if (datosRecibidos && datosRecibidos.data) {
+            datosTotales = datosRecibidos.data; 
+            datosFiltrados = [...datosTotales];
+            finalizarCarga();
+        } else {
+            throw new Error("El formato de respuesta no contiene la propiedad 'data'");
+        }
 
-        generarOpcionesFiltros(); 
-        finalizarCarga();
     } catch (error) {
-        console.error("Error conexión:", error);
-        Swal.fire('Error de Conexión', 'No se pudo conectar con el servidor.', 'error');
+        console.error("Error:", error);
+        Swal.fire('Error', 'No se pudieron obtener los datos de la propiedad .data', 'error');
         document.getElementById("loader").style.display = "none";
     }
 }
 
+// ESTA FUNCIÓN ES VITAL: Une la carga con la vista
 function finalizarCarga() {
-    datosFiltrados = [...datosTotales];
     paginaActual = 1;
     document.getElementById("loader").style.display = "none";
-    document.getElementById("dataWindow").classList.remove("d-none");
-    renderizarTabla();
+    
+    const dataWindow = document.getElementById("dataWindow");
+    if (dataWindow) dataWindow.classList.remove("d-none");
+    
+    renderizarTabla(); // Aquí es donde se dibuja la tabla la primera vez
 }
 
-// (Aquí continuarían tus funciones de renderizarTabla, filtros y buscador que ya tienes bien configuradas)
+function renderizarTabla() {
+    const cuerpo = document.getElementById("cuerpoTabla");
+    const cabecera = document.getElementById("cabeceraTabla");
+    
+    if (!cuerpo || !cabecera || !datosFiltrados || datosFiltrados.length === 0) {
+        if(cuerpo) cuerpo.innerHTML = `<tr><td class="text-center">No hay datos para mostrar</td></tr>`;
+        return;
+    }
+
+    // 1. Obtener columnas del primer registro de la propiedad "data"
+    const columnas = Object.keys(datosFiltrados[0]);
+
+    // 2. Dibujar cabecera
+    cabecera.innerHTML = columnas
+        .map(col => `<th>${col.toUpperCase().replace(/_/g, ' ')}</th>`)
+        .join('');
+
+    // 3. Dibujar filas
+    cuerpo.innerHTML = "";
+    const inicio = (paginaActual - 1) * filasPorPagina;
+    const filasParaMostrar = datosFiltrados.slice(inicio, inicio + filasPorPagina);
+
+    filasParaMostrar.forEach(fila => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = columnas.map(col => `<td>${fila[col] ?? '—'}</td>`).join('');
+        cuerpo.appendChild(tr);
+    });
+
+    actualizarControlesPagina(); // Esta función activa/desactiva los botones
+}
+
+
+function actualizarControlesPagina() {
+    const totalPaginas = Math.ceil(datosFiltrados.length / filasPorPagina);
+    const txtConteo = document.getElementById("txtConteoPagina");
+    
+    if (txtConteo) {
+        txtConteo.innerText = `Página ${paginaActual} de ${totalPaginas || 1} (${datosFiltrados.length} registros)`;
+    }
+
+    const btnAnt = document.getElementById("btnAnterior");
+    const btnSig = document.getElementById("btnSiguiente");
+
+    if (btnAnt) btnAnt.disabled = (paginaActual === 1);
+    if (btnSig) btnSig.disabled = (paginaActual >= totalPaginas || totalPaginas === 0);
+}
+
+function paginaAnterior() {
+    if (paginaActual > 1) {
+        paginaActual--;
+        renderizarTabla();
+    }
+}
+
+function paginaSiguiente() {
+    const totalPaginas = Math.ceil(datosFiltrados.length / filasPorPagina);
+    if (paginaActual < totalPaginas) {
+        paginaActual++;
+        renderizarTabla();
+    }
+}
+
+// --- 4. BUSCADOR DINÁMICO (MODULAR) ---
+if (inputBusqueda) {
+    inputBusqueda.addEventListener('input', function(e) {
+        const termino = e.target.value.toLowerCase();
+        
+        datosFiltrados = datosTotales.filter(fila => {
+            // Busca el término en CUALQUIER columna del registro
+            return Object.values(fila).some(valor => 
+                String(valor).toLowerCase().includes(termino)
+            );
+        });
+        
+        paginaActual = 1;
+        renderizarTabla();
+    });
+}
+
+// --- 5. PAGINACIÓN ---
+function actualizarControlesPagina() {
+    const totalPaginas = Math.ceil(datosFiltrados.length / filasPorPagina);
+    const txtConteo = document.getElementById("txtConteoPagina");
+    
+    if (txtConteo) {
+        txtConteo.innerText = `Página ${paginaActual} de ${totalPaginas || 1} (${datosFiltrados.length} registros)`;
+    }
+
+    document.getElementById("btnAnterior").disabled = (paginaActual === 1);
+    document.getElementById("btnSiguiente").disabled = (paginaActual >= totalPaginas || totalPaginas === 0);
+}
+
+function paginaAnterior() {
+    if (paginaActual > 1) { paginaActual--; renderizarTabla(); }
+}
+
+function paginaSiguiente() {
+    const totalPaginas = Math.ceil(datosFiltrados.length / filasPorPagina);
+    if (paginaActual < totalPaginas) { paginaActual++; renderizarTabla(); }
+}
+
+async function eliminarTodo() {
+    // 1. Mostrar la modal de "Procesando..." con SweetAlert2
+    Swal.fire({
+        title: 'Eliminando base de datos',
+        text: 'Por favor, espera un momento...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // Esto activa el spinner de carga
+        }
+    });
+
+    try {
+        // 2. Realizar la petición DELETE al servidor 
+        const response = await fetch('http://192.168.0.184:8000/limpiar', {
+            method: 'DELETE',
+            headers: { 'accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error("Error al borrar los datos");
+
+        // 3. Si todo sale bien, limpiamos nuestra tabla en el frontend 🧹
+        datosTotales = [];
+        datosFiltrados = [];
+        renderizarTabla();
+
+        // 4. Cambiamos la modal de carga por una de éxito ✅
+        Swal.fire('¡Logrado!', 'La base de datos ha sido limpiada.', 'success');
+
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', 'No se pudo limpiar la base de datos.', 'error');
+    }
+}
