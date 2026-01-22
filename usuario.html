@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard | Portal de Usuario</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="style_usuario.css">
+</head>
+<body>
+
+    <button id="btnMenu"><i class="fas fa-bars"></i></button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">FILTRADO DE DATA</div>
+        <nav class="nav-links">
+            <a href="#"><i class="fas fa-home"></i> Inicio</a>
+            <a href="#"><i class="fas fa-folder"></i> Manual</a>
+        </nav>
+    </aside>
+
+    <main class="contenido-principal">
+        
+        <section class="bienvenida mb-4">
+            <div>
+                <h5 class="bienvenida_admin">Bienvenido al portal de usuario</h5>
+                <div class="busqueda-rapida">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="inputBusqueda" placeholder="FILTRADO...">
+                </div>
+            </div>
+            <img class="user_imagen" src="assets/Dos_personajes.png" alt="imagen de usuario">
+        </section>
+
+        <div class="card-datos mb-4">
+            <h6 class="text-secondary fw-bold mb-3">
+                <i class="fas fa-database me-2"></i>Gestión de Solicitudes
+            </h6>
+            
+            <div class="d-flex gap-2">
+                <button class="btn-pildora btn-menta" onclick="procesarCarga()">Ver Tabla</button>
+            </div>
+        </div>
+
+        <div id="loader" style="display: none; text-align: center; padding: 40px;">
+            <div class="spinner-border text-primary" role="status"></div>
+            <h5 class="mt-3">Procesando registros...</h5>
+        </div>
+
+        <section id="dataWindow" class="card-datos d-none">
+            <h5 class="fw-bold mb-3">Datos Procesados</h5>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="miTabla">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Cédula</th>
+                            <th>Denunciante</th>
+                            <th>Estado</th>
+                            <th>Municipio</th>
+                            <th>Categoría</th>
+                            <th>Subcategoría</th>
+                            <th class="text-center">Estatus</th>
+                            <th class="text-center">Aprobación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla"></tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <small class="text-secondary" id="txtConteoPagina">Cargando datos...</small>
+                <div class="d-flex gap-2">
+                    <button class="btn-pildora btn-light border" id="btnAnterior" onclick="paginaAnterior()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn-pildora btn-light border" id="btnSiguiente" onclick="paginaSiguiente()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex align-items-center flex-wrap">
+                <button class="btn-pildora btn-mostaza me-auto" onclick="limpiarPantalla()">
+                    Limpiar
+                </button>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <div id="txtCambios" class="bg-light p-2 px-3 rounded-3 border text-secondary small">
+                        Sin cambios pendientes
+                    </div>
+
+                    <button class="btn-pildora btn-actualizar" onclick="guardarCambiosFinales()">
+                        <i class="fas fa-save me-2"></i>Actualizar Base
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="funcionalidades_usuario.js"></script>
+</body>
+</html>

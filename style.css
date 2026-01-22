@@ -1,0 +1,390 @@
+/* --- RESET Y VARIABLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --rosa-banner: #db7a8a;
+    --verde-menta: #2ac39b;
+    --verde-suave: #b8e4ce;
+    --mostaza: #d4a100;
+    --sidebar-dark: #1a1c1e;
+    --fondo: #f5ecec;
+    --text-primary: #2c3e50;
+    --gris-borde: #dee2e6;
+}
+
+
+html {
+    /* Evita que los navegadores ajusten el tamaño del texto automáticamente */
+    -webkit-text-size-adjust: 100%;
+    /* Estándar de tamaño base */
+    font-size: 16px; 
+}
+
+body {
+    /* Asegura que no haya scroll horizontal fuera del contenido */
+    overflow-x: hidden;
+    /* Suavizado de fuentes para que se vean iguales en Edge/Chrome */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--fondo);
+    color: var(--text-primary);}
+   
+
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--sidebar-dark);
+    position: fixed;
+    z-index: 1100;
+    padding: 25px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+    border-bottom: 1px solid #2d2d2d;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    color: whitesmoke;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding-left: 15px;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    transition: 0.2s;
+}
+
+.nav-links a i { 
+    margin-right: 12px; 
+    color: var(--verde-menta); 
+    width: 20px;
+}
+
+.nav-links a:hover {
+    background: rgba(42, 195, 155, 0.1);
+    color: var(--verde-menta);
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
+.contenido-principal {
+    margin-left: 250px;
+    padding: 30px;
+    transition: margin-left 0.3s ease;
+    max-width: calc(100vw - 250px);
+}
+
+#btnMenu {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1200;
+    background: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* --- BANNER ROSA (BIENVENIDA) --- */
+.bienvenida {
+    background: linear-gradient(135deg, #c0818c, var(--rosa-banner));
+    border-radius: 25px;
+    padding: 30px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 10px 20px rgba(226, 148, 161, 0.2);
+}
+
+.bienvenida_admin {
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.busqueda-rapida {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(5px);
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    max-width: 350px;
+}
+
+.busqueda-rapida input {
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.busqueda-rapida input::placeholder { color: rgba(255,255,255,0.9); }
+
+.Admin_imagen {
+    max-width: 120px;
+    height: auto;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+/* --- SELECTOR DE ARCHIVO --- */
+.btn-custom-left {
+    border: 1px solid var(--gris-borde) ;
+    border-right: none !important;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    border-radius:  25px !important;
+    cursor: pointer;
+    color: #221e1e;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+/* --- UNIFICACIÓN DEL SELECTOR (Adiós al "picado") --- */
+/* Ajuste para que el botón y el span sean siameses */
+.grupo-personalizado {
+    display: flex;
+    align-items: stretch; /* Esto obliga a ambos a medir lo mismo exactamente */
+    height: 42px;         /* Prueba con una altura fija */
+    border: 1px solid var(--gris-borde);
+    border-radius: 50px;
+    overflow: hidden;
+    background-color: white;
+}
+
+#btnSeleccionar {
+    background-color: #e9e5e6;
+    border: none;
+    border-right: 1px solid var(--gris-borde);
+    padding: 0 20px;
+    height: 100%; /* Que ocupe todo el alto del padre */
+    margin: 0;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+
+}
+
+.btn-seleccionar-archivo{
+border: none;
+color: #3c3d3d;
+border-right: 1px solid var(--gris-borde)
+}
+
+.btn-limpiar {
+    background-color:#dddadb; /* Fondo transparente */
+    color: #4d4e50; /* Gris neutro profesional */
+    border: 1px solid #ced4da; /* Borde sutil */
+    padding: 8px 20px;
+    border-radius: 50px; /* Mantiene la forma ovalada de tu diseño */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Animación suave al pasar el mouse */
+}
+
+.btn-limpiar:hover {
+    background-color: #a0a2a3; /* Fondo gris muy clarito al pasar el mouse */
+    color: #343a40; /* Texto un poco más oscuro */
+    border-color: #adb5bd; /* Borde más definido */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra muy sutil */
+}
+
+
+
+.Procesando_registros{
+   font-style: oblique;
+
+}
+
+
+
+#nombreArchivo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    color: #4e4c4c; /* Un gris más suave para el placeholder */
+    background: transparent;
+    border: none !important;
+}
+
+
+
+#btnSeleccionar:hover {
+    background-color: #c5c0c2;
+}
+
+/* Colores para los mensajes de estado */
+.texto-exito {
+    color: #2ac39b !important;
+    font-weight: bold;
+}
+
+.texto-error {
+    color: #dc3545 !important;
+    font-weight: bold;
+}
+
+/* Estilos para la barra de progreso ovalada */
+.progress-bar-container {
+    width: 250px;
+    height: 14px;
+    background-color: #f0f0f0;
+    border-radius: 50px;
+    margin: 15px auto;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.progress-oval {
+    width: 70px;
+    height: 100%;
+    background-color: #2ac39b;
+    border-radius: 50px;
+    position: absolute;
+    animation: moverOval 2s infinite ease-in-out;
+}
+
+@keyframes moverOval {
+    0% { left: -70px; }
+    50% { left: 100%; }
+    100% { left: -70px; }
+}
+/* --- UNIFICACIÓN DE BOTONES LADO DERECHO --- */
+
+.btn-pildora {
+    height: 45px; /* Misma altura que el selector de la izquierda */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px !important;
+    text-transform: capitalize; /* Convierte 'cargar' en 'Cargar' visualmente */
+}
+
+/* --- BOTONES DE GESTIÓN (Unificando alturas) --- */
+.btn-pildora {
+    height: 45px;           /* MISMA ALTURA que el input-group-archivo */
+    border-radius: 50px !important;
+    font-weight: 600;
+    padding: 0 25px;        /* Usamos 0 arriba/abajo porque la altura es fija */
+    border: none;
+    transition: 0.2s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: capitalize; /* Para que 'cargar' se vea como 'Cargar' */
+    color: #303131;
+}
+
+
+
+
+.btn-menta { background: var(--verde-suave); color: #1a4d36; }
+.btn-blue { background: #A2D2FF}
+.btn-mostaza { background: #f9d776; color:rgb(51, 48, 48); }
+.btn-actualizar { background: #1a8754; color: white; padding: 10px 30px; }
+.btn-eliminar-outline {
+    background-color: rgb(177, 34, 34) !important;
+    color: #ebdcde !important;
+    border: 1.5px solid #dc3545 !important;
+    font-size: 0.85rem;
+}
+
+/* --- TABLA Y FILTROS --- */
+.card-datos {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    width: 100%;
+    /* No ponemos overflow: hidden aquí para dejar respirar a los dropdowns */
+}
+
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: visible !important; /* CLAVE: permite que el menú salga del contenedor verticalmente */
+    width: 100%;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+#miTabla {
+    width: 100%;
+    min-width: 1100px; /* Evita que las columnas se aplasten */
+    border-collapse: separate; /* Necesario para que el z-index de los dropdowns funcione mejor */
+}
+
+#miTabla th, #miTabla td {
+    padding: 15px;
+    white-space: nowrap;
+    max-width: 250px;
+    overflow: visible; /* Asegura que el contenido del dropdown se vea */
+}
+
+.table th { 
+    background: var(--rosa-banner); 
+    color: #413f40;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    position: relative; /* Contexto para el dropdown absolute */
+    z-index: 10; /* Eleva los encabezados */
+}
+
+/* Estilos para el menú de filtros (Dropdown) */
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    z-index: 2000 !important; /* Garantiza que esté por encima de las filas de la tabla */
+    border-radius: 15px;
+    border: 1px solid var(--gris-borde);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    background-color: white !important;
+    min-width: 220px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 992px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.active { transform: translateX(0); }
+    .contenido-principal { 
+        margin-left: 0; 
+        padding: 15px;
+        padding-top: 80px; 
+        max-width: 100vw; 
+    }
+    #btnMenu { display: block; }
+    #btnMenu.desplazado { left: 195px; }
+    .bienvenida { flex-direction: column-reverse; text-align: center; gap: 20px; }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    /* Solo para navegadores basados en Webkit (Chrome/Edge/Safari) */
+    body {
+        zoom: 1; /* Asegúrate de que esté en 1 */
+    }
+}
