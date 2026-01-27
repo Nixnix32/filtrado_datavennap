@@ -1,0 +1,51 @@
+# --- SEGURIDAD ---
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Ignorar carpetas de datos de Docker (bind mounts)
+db_data/
+uploads/
+
+# --- PYTHON (Archivos temporales) ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+test_db.py
+debug_utf8.py
+check_db.py
+
+# --- BASES DE DATOS ---
+*.sqlite3
+
+# --- HERRAMIENTAS DE DESARROLLO ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- ARCHIVOS DE DATOS (IMPORTANTE PARA TU PROYECTO) ---
+# Ignoramos archivos Excel que uses para pruebas locales para no llenar el repo de basura
+*.xlsx
+*.xls
+*.csv
