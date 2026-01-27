@@ -5,6 +5,10 @@ env/
 venv/
 ENV/
 
+# Ignorar carpetas de datos de Docker (bind mounts)
+db_data/
+uploads/
+
 # --- PYTHON (Archivos temporales) ---
 __pycache__/
 *.py[cod]
