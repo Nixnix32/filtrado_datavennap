@@ -14,6 +14,12 @@
 
     <button id="btnMenu"><i class="fas fa-bars"></i></button>
 
+    <div id="loader" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">FILTRADO DE DATA</div>
         <nav class="nav-links">
@@ -41,44 +47,50 @@
                 <i class="fas fa-database me-2"></i>Gestión de Base de Datos
             </h6>
             
-            <div class="d-flex flex-wrap align-items-center gap-3">
-                <div class="contenedor-selector-archivo" style="flex: 2; min-width: 280px;">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-lg-7">
                     <input type="file" id="inputExcel" class="d-none" accept=".xlsx, .xls, .csv">
-                    <div class="grupo-personalizado">
-                        <button class="btn-seleccionar-archivo" type="button" id="btnSeleccionar">
+                    <div class="grupo-personalizado w-100 d-flex align-items-center">
+                        <button class="btn-seleccionar-archivo flex-shrink-0" type="button" id="btnSeleccionar">
                             Seleccionar Archivo
                         </button>
-                        <span id="nombreArchivo">Ningún archivo seleccionado</span>
+                        <span id="nombreArchivo" class="flex-grow-1 px-3 text-truncate text-muted">
+                            Ningún archivo seleccionado
+                        </span>
                     </div>
                 </div>
 
-                <div class="d-flex gap-2 w-100-mobile" style="flex: 1; min-width: 200px;">
-                    <button class="btn-pildora btn-menta flex-fill" onclick="enviandodatos()">Cargar</button>
-                    <button class="btn-pildora btn-blue flex-fill" onclick="cargarUsuariosDesdeBackend()">Mostrar</button>
+                <div class="col-12 col-lg-5">
+                    <div class="d-flex gap-2">
+                        <button id="btnCargar" class="btn-pildora btn-menta flex-fill" onclick="subirArchivo()">
+                            Cargar
+                        </button>
+                        <button id="btnMostrar" class="btn-pildora btn-blue flex-fill" onclick="mostrarDatos()">
+                            Mostrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contenedorProgreso" style="display: none; margin-top: 25px; width: 100%;">
+                <p id="textoCarga" class="mb-1 fw-bold text-secondary" style="font-size: 13px;">Subiendo: 0%</p>
+                <div class="progress" style="height: 12px; border-radius: 10px; background-color: #eee;">
+                    <div id="barraProgreso" class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                         role="progressbar" style="width: 0%; border-radius: 10px; transition: width 0.4s ease;">
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="loader" style="display: none; text-align: center; margin: 20px 0;">
-            <div class="progress-bar-container">
-                <div class="progress-oval"></div>
-            </div>
-            <p class="Procesando_registros">Procesando registros...</p>
-        </div>
-
         <section id="dataWindow" class="card-datos d-none">
-            <h5 class="fw-bold mb-3">Datos Procesados Dinámicamente</h5>
-            
-            <div class="table-responsive">
-                <table class="table table-hover align-middle" id="miTabla">
-                    <thead>
-                        <tr id="cabeceraTabla">
-                            </tr>
-                    </thead>
-                    <tbody id="cuerpoTabla">
-                        </tbody>
-                </table>
-            </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" id="miTabla">
+            <thead class="table-dark">
+                <tr id="cabeceraTabla"></tr>
+            </thead>
+            <tbody id="cuerpoTabla"></tbody>
+        </table>
+    </div>
 
             <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
                 <small class="text-secondary" id="txtConteoPagina">Cargando datos...</small>
@@ -98,7 +110,7 @@
                 </button>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap justify-content-center">
-                    <div class="bg-light p-2 px-3 rounded-3 border" id="txtCambios">
+                    <div class="bg-light p-2 px-3 rounded-3 border text-muted small" id="txtCambios">
                         Sin cambios pendientes
                     </div>
                     <button class="btn-pildora btn-actualizar w-100-mobile" onclick="guardarCambiosFinales()">
@@ -106,7 +118,7 @@
                     </button>
                 </div>
                 
-                <button class="btn-pildora btn-mostaza" onclick="cargarUsuariosDesdeBackend()">
+                <button class="btn-pildora btn-mostaza" onclick="mostrarDatos()">
                     <i class="fas fa-sync me-1"></i> Refrescar
                 </button>
             </div>
